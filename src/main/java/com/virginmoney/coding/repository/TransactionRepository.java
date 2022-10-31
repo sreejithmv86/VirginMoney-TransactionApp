@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-    List<Transaction> findByCategoryOrderByTransactionDateDesc(String category);
+    List<Transaction> findByCategoryIgnoreCaseOrderByTransactionDateDesc(String category);
 }

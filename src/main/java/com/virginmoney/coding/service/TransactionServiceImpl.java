@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Year;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<Transaction> getAllTransactionsForCategory(String category) {
-        return transactionRepository.findByCategoryOrderByTransactionDateDesc(category);
+        return transactionRepository.findByCategoryIgnoreCaseOrderByTransactionDateDesc(category);
     }
 
     @Override
@@ -28,7 +29,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Map<String, Double> getAllTransactions() {
+    public Map<String, Double> getCategoryWiseTotalSpend() {
         List<Transaction> transactions = transactionRepository.findAll();
         Map<String, Double> map = transactions.stream().collect(
                 Collectors.groupingBy(Transaction::getCategory, Collectors.summingDouble(Transaction::getAmount)));
@@ -39,6 +40,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Map<String, Double> getMonthlyAverageOnCategory(YearMonth yearMonth, String category) {
         List<Transaction> transactions = getAllTransactionsForCategory(category);
+//        LocalDate dateFromRequest = yearMonth.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         Map<String, Double> result = new HashMap<>();
         Double monthlyAverage = transactions.stream().filter(t -> {
             if (Objects.nonNull(t.getTransactionDate())) {
@@ -54,6 +56,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Transaction> getHighestSpendInGivenCategoryForYear(Year year, String category) {
         List<Transaction> transactions = getAllTransactionsForCategory(category);
+//        LocalDate dateFromRequest = year.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         OptionalDouble maxValue = transactions.stream().filter(t -> {
             if (Objects.nonNull(t.getTransactionDate())) {
                 LocalDate dateFromDB = t.getTransactionDate();
@@ -70,6 +73,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Transaction> getLowestSpendInGivenCategoryForYear(Year year, String category) {
         List<Transaction> transactions = getAllTransactionsForCategory(category);
+//        LocalDate dateFromRequest = year.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         OptionalDouble minValue = transactions.stream().filter(t -> {
             if (Objects.nonNull(t.getTransactionDate())) {
                 LocalDate dateFromDB = t.getTransactionDate();
