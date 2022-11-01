@@ -8,26 +8,32 @@ import java.util.regex.Pattern;
 
 public class RequestValidator {
 
-    public static boolean isValidDatePattern(String dateStr, String pattern) {
+    private static boolean isValidDatePattern(String dateStr, String pattern) {
         DateFormat formatter1 = new SimpleDateFormat(pattern,new Locale("en","IN"));
         formatter1.setLenient(false);
         try {
             formatter1.parse(dateStr);
+            return true;
         } catch (ParseException e) {
             System.out.println("The provided date input : " + dateStr +
                     " does not match the expected pattern : " + pattern);
             return false;
         }
-        return true;
     }
 
     public static boolean isValidYearMonthPattern(String yearMonth) {
         Pattern pattern = Pattern.compile("\\d{4}[-]\\d{1,2}");
-        return pattern.matcher(yearMonth).matches();
+        if(pattern.matcher(yearMonth).matches()){
+           return isValidDatePattern(yearMonth,"yyyy-MM");
+        }
+        return false;
     }
 
     public static boolean isValidYearPattern(String year) {
         Pattern pattern = Pattern.compile("\\d{4}");
-        return pattern.matcher(year).matches();
+        if(pattern.matcher(year).matches()){
+            return isValidDatePattern(year,"yyyy");
+        }
+        return false;
     }
 }

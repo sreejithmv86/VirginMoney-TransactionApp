@@ -37,6 +37,15 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public Map<String, Double> getTotalSpendPerCategory(String category) {
+        List<Transaction> transactions = getAllTransactionsForCategory(category);
+        Map<String, Double> map = transactions.stream().collect(
+                Collectors.groupingBy(Transaction::getCategory, Collectors.summingDouble(Transaction::getAmount)));
+
+        return map;
+    }
+
+    @Override
     public Map<String, Double> getMonthlyAverageOnCategory(YearMonth yearMonth, String category) {
         List<Transaction> transactions = getAllTransactionsForCategory(category);
         Map<String, Double> result = new HashMap<>();

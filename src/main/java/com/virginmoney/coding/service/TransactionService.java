@@ -15,6 +15,8 @@ public interface TransactionService {
 
     Map<String, Double> getCategoryWiseTotalSpend();
 
+    Map<String, Double> getTotalSpendPerCategory(String category);
+
     Map<String, Double> getMonthlyAverageOnCategory(YearMonth yearMonth, String category);
 
     List<Transaction> getHighestSpendInGivenCategoryForYear(Year year, String category);
